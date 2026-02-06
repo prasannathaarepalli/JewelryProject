@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exhibition</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+    <h1>Virtual Exhibition</h1>
+    <div class="nav-links">
+        <a href="/user_dashboard">Dashboard</a>
+        <a href="/wishlist">Wishlist</a>
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+    <h2>Jewellery Collection</h2>
+    <div class="grid">
+        {% for product in products %}
+        <div class="item">
+            <img src="{{ product.image }}" alt="{{ product.name }}">
+            <h3>{{ product.name }}</h3>
+            <p class="details">{{ product.details }}</p>
+            <p class="price">{{ product.price }}</p>
+            <button onclick="addToWishlist('{{ product.name }}', '{{ product.image }}', '{{ product.details }}')">Add to Wishlist</button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    function addToWishlist(name, image, details) {
+        fetch('/add_to_wishlist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                item_name: name, 
+                item_image: image,
+                item_details: details
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                alert(name + " added to your wishlist!");
+            } else {
+                alert("Please login first.");
+                window.location.href = "/login";
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

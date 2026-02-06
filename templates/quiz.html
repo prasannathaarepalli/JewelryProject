@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+    <h1>Jewellery Quiz</h1>
+</div>
+
+<div class="container">
+    <div class="card">
+        <h2>Simple Quiz</h2>
+        <form method="POST">
+            <p>What metal is used in temple jewellery?</p>
+            <input type="text" name="score" placeholder="Enter 15 if correct">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

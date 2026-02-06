@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+    <h1>Place Order</h1>
+</div>
+
+<div class="container">
+    <div class="card">
+        <h2>Order Form</h2>
+        <form method="POST">
+            <input name="first_name" placeholder="First Name">
+            <input name="last_name" placeholder="Last Name">
+            <input name="street_address" placeholder="Street Address">
+            <input name="city" placeholder="City">
+            <input name="state" placeholder="State">
+            <input name="postal_code" placeholder="Postal Code">
+            <select name="payment_method">
+                <option>Cash on Delivery</option>
+                <option>UPI</option>
+            </select>
+            <button type="submit">Place Order</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
