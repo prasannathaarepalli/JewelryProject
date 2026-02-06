@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.secret_key = 'prasannatha_secret_key'
 
 # --- AWS DYNAMODB SETUP ---
-# Ensure your region matches your setup (ap-south-1 is Mumbai)
+# Ensure region matches your EC2 location (Mumbai: ap-south-1)
 dynamodb = boto3.resource('dynamodb', region_name='ap-south-1')
 user_table = dynamodb.Table('UserTable')
 wishlist_table = dynamodb.Table('WishlistTable')
@@ -164,8 +164,7 @@ def order():
         return redirect(url_for('login'))
     
     if request.method == 'POST':
-        # Logic: Here you could save shipping info to DynamoDB
-        # For this demo, we successfully "place" the order and view history
+        # Success logic: Redirect to history after "purchasing"
         return redirect(url_for('order_history'))
 
     return render_template('order_form.html')
@@ -176,14 +175,14 @@ def order_history():
         return redirect(url_for('login'))
     
     email = session['email']
-    # We query the wishlist items to simulate a 'Purchased Items' history
+    # Query wishlist to simulate historical orders
     response = wishlist_table.query(
         KeyConditionExpression=Key('email').eq(email)
     )
     items = response.get('Items', [])
     return render_template('order_history.html', orders=items)
 
-# --- APP START ---
+# --- START SERVER ---
 if __name__ == '__main__':
-    # Using port 80 for AWS EC2 deployment
+    # Run on Port 80 for AWS EC2
     app.run(host='0.0.0.0', port=80, debug=True)
