@@ -16,6 +16,28 @@ wishlist_table = dynamodb.Table('WishlistTable')
 def home():
     return render_template('home.html', logged_in='email' in session)
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        try:
+            email = request.form['email'].strip().lower()
+            username = request.form['username']
+            password = request.form['password']
+            hashed_pw = generate_password_hash(password)
+
+            user_table.put_item(
+                Item={
+                    'email': email,
+                    'username': username,
+                    'hashed_password': hashed_pw,
+                    'login_count': 0
+                }
+            )
+            return redirect(url_for('login'))
+        except Exception as e:
+            return f"Registration Error: {str(e)}"
+    return render_template('register.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -23,10 +45,13 @@ def login():
         password = request.form['password']
         response = user_table.get_item(Key={'email': email})
         user = response.get('Item')
+        
         if user and check_password_hash(user['hashed_password'], password):
             session['email'] = email
             print(f"DEBUG: User logged in as {email}")
             return redirect(url_for('user_dashboard'))
+        else:
+            return "Invalid Credentials. Please try again."
     return render_template('login.html')
 
 @app.route('/user_dashboard')
@@ -36,6 +61,7 @@ def user_dashboard():
 
 @app.route('/virtual_exhibition')
 def virtual_exhibition():
+    if 'email' not in session: return redirect(url_for('login'))
     return render_template('virtual_exhibition.html')
 
 @app.route('/add_to_wishlist', methods=['POST'])
@@ -63,12 +89,30 @@ def wishlist():
     if 'email' not in session: return redirect(url_for('login'))
     
     email = session['email']
+    # Filter strictly by the logged-in user's email
     response = wishlist_table.query(
         KeyConditionExpression=Key('email').eq(email)
     )
     items = response.get('Items', [])
     print(f"DEBUG: Found {len(items)} items in wishlist for {email}")
     return render_template('wishlist.html', wishlist=items)
+
+# --- NEW FEATURE: REMOVE FROM WISHLIST ---
+@app.route('/remove_from_wishlist', methods=['POST'])
+def remove_from_wishlist():
+    if 'email' not in session: return redirect(url_for('login'))
+    
+    email = session['email']
+    item_id = request.form.get('item_id')
+    
+    wishlist_table.delete_item(
+        Key={
+            'email': email,
+            'item_id': item_id
+        }
+    )
+    print(f"DEBUG: Removed {item_id} for {email}")
+    return redirect(url_for('wishlist'))
 
 @app.route('/logout')
 def logout():
