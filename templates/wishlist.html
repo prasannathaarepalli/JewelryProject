@@ -4,76 +4,28 @@
     <title>My Wishlist | Prasannatha Jewelers</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
-        .wishlist-container {
-            max-width: 900px;
-            margin: 50px auto;
-            padding: 20px;
-            background: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border-radius: 10px;
-        }
-        .wishlist-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #eee;
-            padding: 20px 0;
-        }
-        .item-info h3 {
-            color: #D4AF37; /* Royal Gold */
-            margin: 0;
-        }
-        .btn-remove {
-            color: #ff4d4d;
-            text-decoration: none;
-            font-size: 0.9rem;
-            border: 1px solid #ff4d4d;
-            padding: 5px 10px;
-            border-radius: 5px;
-        }
-        .btn-remove:hover {
-            background: #ff4d4d;
-            color: white;
-        }
-        .empty-msg {
-            text-align: center;
-            padding: 40px;
-            color: #888;
-        }
+        .wishlist-item { border: 1px solid #ddd; padding: 15px; margin: 10px; border-radius: 8px; }
+        .empty-msg { text-align: center; margin-top: 50px; color: #666; }
     </style>
 </head>
 <body>
-
-<div class="navbar">
-    <h1>Prasannatha Jewelers</h1>
-    <div class="nav-links">
-        <a href="/">Home</a>
-        <a href="/virtual_exhibition">Exhibition</a>
-        <a href="/logout">Logout</a>
-    </div>
-</div>
-
-<div class="wishlist-container">
-    <h2 style="border-bottom: 2px solid #D4AF37; padding-bottom: 10px;">My Saved Jewelry</h2>
-
-    {% if items %}
-        {% for item in items %}
-        <div class="wishlist-item">
-            <div class="item-info">
-                <h3>{{ item.item_name }}</h3>
-                <p>Item ID: {{ item.item_id }}</p>
+    <h1>My Saved Jewelry</h1>
+    
+    <div class="wishlist-container">
+        {% if wishlist and wishlist|length > 0 %}
+            {% for item in wishlist %}
+                <div class="wishlist-item">
+                    <h3>{{ item.item_name }}</h3>
+                    <p>ID: {{ item.item_id }}</p>
+                    <p>Added: {{ item.added_date }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-msg">
+                <p>Your wishlist is empty. Start exploring the exhibition!</p>
+                <a href="/virtual_exhibition">Back to Exhibition</a>
             </div>
-            <a href="/remove_item/{{ item.item_id }}" class="btn-remove">Remove</a>
-        </div>
-        {% endfor %}
-    {% else %}
-        <div class="empty-msg">
-            <p>Your wishlist is empty. Start exploring the exhibition!</p>
-            <br>
-            <a href="/virtual_exhibition" style="color: #D4AF37;">Back to Exhibition</a>
-        </div>
-    {% endif %}
-</div>
-
+        {% endif %}
+    </div>
 </body>
 </html>
