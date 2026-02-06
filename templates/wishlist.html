@@ -2,30 +2,31 @@
 <html>
 <head>
     <title>My Wishlist | Prasannatha Jewelers</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
-        .wishlist-item { border: 1px solid #ddd; padding: 15px; margin: 10px; border-radius: 8px; }
-        .empty-msg { text-align: center; margin-top: 50px; color: #666; }
+        body { font-family: Arial; padding: 20px; background: #f4f4f4; }
+        .card { background: white; padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 5px solid #D4AF37; }
+        .navbar { background: #800000; padding: 10px; color: gold; margin-bottom: 20px; }
+        .navbar a { color: white; margin-right: 15px; text-decoration: none; }
     </style>
 </head>
 <body>
-    <h1>My Saved Jewelry</h1>
-    
-    <div class="wishlist-container">
-        {% if wishlist and wishlist|length > 0 %}
-            {% for item in wishlist %}
-                <div class="wishlist-item">
-                    <h3>{{ item.item_name }}</h3>
-                    <p>ID: {{ item.item_id }}</p>
-                    <p>Added: {{ item.added_date }}</p>
-                </div>
-            {% endfor %}
-        {% else %}
-            <div class="empty-msg">
-                <p>Your wishlist is empty. Start exploring the exhibition!</p>
-                <a href="/virtual_exhibition">Back to Exhibition</a>
-            </div>
-        {% endif %}
+    <div class="navbar">
+        <strong>Prasannatha Jewelers</strong> | 
+        <a href="/virtual_exhibition">Exhibition</a>
+        <a href="/logout">Logout</a>
     </div>
+
+    <h2>My Saved Jewelry</h2>
+
+    {% if wishlist %}
+        {% for item in wishlist %}
+            <div class="card">
+                <h3>{{ item.item_name }}</h3>
+                <p>Date Added: {{ item.added_date }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Your wishlist is empty. <a href="/virtual_exhibition">Go back and add items!</a></p>
+    {% endif %}
 </body>
 </html>
