@@ -5,80 +5,119 @@
     <style>
         /* General Page Styling */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
+            font-family: 'Playfair Display', serif; /* Elegant font for jewelry */
+            background-color: #fcfcfc;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
 
-        h2 {
+        .navbar {
+            background-color: #800000; /* Deep Maroon to match your theme */
+            color: #D4AF37;
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h1 { margin: 0; font-size: 1.8rem; }
+        .nav-links a { color: white; text-decoration: none; margin-left: 20px; font-weight: bold; }
+
+        .exhibition-header {
             text-align: center;
-            color: #444;
-            margin-bottom: 40px;
+            padding: 40px 20px;
         }
 
-        /* THE GRID: This puts items side-by-side */
+        /* THE GRID: Places items side-by-side */
         .exhibition-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            padding: 20px 10%;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         /* CARD STYLING */
         .jewelry-card {
             background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             text-align: center;
-            transition: 0.3s;
+            padding-bottom: 25px;
+            transition: transform 0.3s ease;
+            border: 1px solid #eee;
         }
 
         .jewelry-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
 
-        /* IMAGE STYLING: Ensures all images are the same size */
+        /* IMAGE STYLING: Uniform size for all jewelry */
         .jewelry-card img {
             width: 100%;
-            height: 250px;
-            object-fit: contain; /* Shows full image without cropping */
-            background-color: #fff;
-            border-radius: 5px;
-            margin-bottom: 15px;
+            height: 300px;
+            object-fit: contain; /* Prevents cutting off the necklace/earrings */
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #eee;
+        }
+
+        .product-details h3 {
+            color: #333;
+            margin: 20px 0 5px 0;
+            font-size: 1.4rem;
         }
 
         .price {
-            font-size: 1.2rem;
-            color: #B8860B; /* Dark Golden Rod */
+            color: #D4AF37; /* Royal Gold */
             font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
         }
 
+        /* BUTTON STYLING */
         .btn-wishlist {
-            background-color: #333;
+            background-color: #D4AF37;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: bold;
             cursor: pointer;
-            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background 0.3s;
         }
 
         .btn-wishlist:hover {
-            background-color: #B8860B;
+            background-color: #b8962d;
         }
     </style>
 </head>
 <body>
 
-    <h2>Prasannatha Jewelers Exhibition</h2>
+<div class="navbar">
+    <h1>Prasannatha Jewelers</h1>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/virtual_exhibition">Exhibition</a>
+        <a href="/wishlist">My Wishlist</a>
+        <a href="/logout">Logout</a>
+    </div>
+</div>
 
-    <div class="exhibition-grid">
+<div class="exhibition-header">
+    <h2>Heritage Bridal Collection</h2>
+    <div style="width: 60px; height: 3px; background: #D4AF37; margin: 10px auto;"></div>
+</div>
 
-        <div class="jewelry-card">
-            <img src="https://prasannatha-jewelry-assets.s3.ap-south-1.amazonaws.com/kasu_mala.jpg" alt="Kasu Mala">
+<div class="exhibition-grid">
+
+    <div class="jewelry-card">
+        <img src="https://prasannatha-jewelry-assets.s3.ap-south-1.amazonaws.com/kasu_mala.jpg" alt="Traditional Kasu Mala">
+        <div class="product-details">
             <h3>Traditional Kasu Mala</h3>
             <p class="price">₹1,85,000</p>
             <form action="/add_to_wishlist" method="POST">
@@ -87,9 +126,11 @@
                 <button type="submit" class="btn-wishlist">Add to Wishlist</button>
             </form>
         </div>
+    </div>
 
-        <div class="jewelry-card">
-            <img src="https://prasannatha-jewelry-assets.s3.ap-south-1.amazonaws.com/jhumka.jpg" alt="Antique Gold Jhumkas">
+    <div class="jewelry-card">
+        <img src="https://prasannatha-jewelry-assets.s3.ap-south-1.amazonaws.com/jhumka.jpg" alt="Antique Gold Jhumkas">
+        <div class="product-details">
             <h3>Antique Gold Jhumkas</h3>
             <p class="price">₹75,000</p>
             <form action="/add_to_wishlist" method="POST">
@@ -98,8 +139,22 @@
                 <button type="submit" class="btn-wishlist">Add to Wishlist</button>
             </form>
         </div>
-
     </div>
+
+    <div class="jewelry-card">
+        <img src="https://prasannatha-jewelry-assets.s3.ap-south-1.amazonaws.com/temple_haram.jpg" alt="Divine Temple Haram">
+        <div class="product-details">
+            <h3>Divine Temple Haram</h3>
+            <p class="price">₹2,50,000</p>
+            <form action="/add_to_wishlist" method="POST">
+                <input type="hidden" name="item_id" value="HARM003">
+                <input type="hidden" name="item_name" value="Divine Temple Haram">
+                <button type="submit" class="btn-wishlist">Add to Wishlist</button>
+            </form>
+        </div>
+    </div>
+
+</div>
 
 </body>
 </html>
