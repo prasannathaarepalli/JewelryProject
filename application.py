@@ -167,6 +167,7 @@ def order():
         # Success logic: Redirect to history after "purchasing"
         return redirect(url_for('order_history'))
 
+    # This renders order_form.html - Ensure this file exists in /templates
     return render_template('order_form.html')
 
 @app.route('/order_history')
@@ -175,11 +176,12 @@ def order_history():
         return redirect(url_for('login'))
     
     email = session['email']
-    # Query wishlist to simulate historical orders
+    # Query DynamoDB to show items user has interacted with
     response = wishlist_table.query(
         KeyConditionExpression=Key('email').eq(email)
     )
     items = response.get('Items', [])
+    # This renders order_history.html - Ensure this file exists in /templates
     return render_template('order_history.html', orders=items)
 
 # --- START SERVER ---
