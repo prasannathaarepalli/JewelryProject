@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz Result | Prasannatha Jewelers</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; padding: 60px; background: #f4f4f4; }
+        .result-card { background: white; padding: 50px; border-radius: 15px; display: inline-block; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 500px; }
+        .success-text { color: #28a745; font-size: 2rem; margin-bottom: 10px; }
+        .fail-text { color: #d9534f; font-size: 2rem; margin-bottom: 10px; }
+        .coupon-code { background: #fff9e6; border: 3px dashed #D4AF37; padding: 25px; margin: 25px 0; font-size: 28px; font-weight: bold; color: #800000; letter-spacing: 2px; }
+        .btn { display: inline-block; margin: 10px; padding: 12px 25px; text-decoration: none; border-radius: 6px; font-weight: bold; transition: 0.3s; }
+        .btn-retry { background: #800000; color: white; }
+        .btn-dashboard { background: #666; color: white; }
+        .btn:hover { opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <div class="result-card">
+        {% if passed %}
+            <div class="success-text">Perfect Score! 🌟</div>
+            <p>You have correctly identified our heritage motifs.</p>
+            <p>Your 10% discount code is ready:</p>
+            <div class="coupon-code">HERITAGE10</div>
+            <p>Apply this at checkout for your special reward.</p>
+        {% else %}
+            <div class="fail-text">Keep Learning! 📚</div>
+            <p>You scored {{ score }} out of {{ total }}.</p>
+            <p>You need a perfect score to unlock the heritage discount.</p>
+            <a href="/quiz" class="btn btn-retry">Try Again</a>
+        {% endif %}
+        <br>
+        <a href="/user_dashboard" class="btn btn-dashboard">Go to Dashboard</a>
+    </div>
+</body>
+</html>

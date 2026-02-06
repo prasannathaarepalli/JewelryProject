@@ -1,25 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Quiz</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Heritage Quiz | Prasannatha Jewelers</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; padding: 20px; background: #fcfcfc; color: #333; }
+        .quiz-container { max-width: 700px; margin: 0 auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .navbar { background: #800000; padding: 15px; color: #D4AF37; margin-bottom: 30px; border-radius: 8px; font-weight: bold; }
+        .question-block { margin-bottom: 30px; padding: 20px; border: 1px solid #eee; border-radius: 8px; background: #fafafa; }
+        h2 { color: #800000; text-align: center; }
+        .option { display: block; margin: 12px 0; cursor: pointer; padding: 12px; border: 1px solid #ddd; border-radius: 6px; background: white; transition: 0.3s; }
+        .option:hover { background: #fff9e6; border-color: #D4AF37; }
+        .btn-submit { background: #800000; color: white; border: none; padding: 15px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 18px; font-weight: bold; margin-top: 10px; }
+        .btn-submit:hover { background: #a00000; }
+    </style>
 </head>
 <body>
+    <div class="navbar">Prasannatha Jewelers - Heritage Knowledge Quiz</div>
 
-<div class="navbar">
-    <h1>Jewellery Quiz</h1>
-</div>
-
-<div class="container">
-    <div class="card">
-        <h2>Simple Quiz</h2>
+    <div class="quiz-container">
+        <h2>Traditional Motif Quiz</h2>
+        <p style="text-align: center; color: #666;">Identify the heritage of our jewelry to unlock a special discount.</p>
+        <hr style="border: 1px solid #D4AF37; width: 50px; margin-bottom: 30px;">
+        
         <form method="POST">
-            <p>What metal is used in temple jewellery?</p>
-            <input type="text" name="score" placeholder="Enter 15 if correct">
-            <button type="submit">Submit</button>
+            {% for q in questions %}
+            <div class="question-block">
+                <p style="font-size: 1.1rem;"><strong>Question {{ loop.index }}:</strong> {{ q.question }}</p>
+                {% for option in q.options %}
+                <label class="option">
+                    <input type="radio" name="q{{ q.id }}" value="{{ option }}" required> {{ option }}
+                </label>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn-submit">Submit My Answers</button>
         </form>
     </div>
-</div>
-
 </body>
 </html>

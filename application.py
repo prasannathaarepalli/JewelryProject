@@ -7,16 +7,17 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 app.secret_key = 'prasannatha_secret_key'
 
-# AWS DYNAMODB SETUP
+# --- AWS DYNAMODB SETUP ---
 dynamodb = boto3.resource('dynamodb', region_name='ap-south-1')
 user_table = dynamodb.Table('UserTable')
 wishlist_table = dynamodb.Table('WishlistTable')
+
+# --- HOME & AUTH ROUTES ---
 
 @app.route('/')
 def home():
     return render_template('home.html', logged_in='email' in session)
 
-# --- REGISTRATION ---
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -39,7 +40,6 @@ def register():
             return f"Registration Error: {str(e)}"
     return render_template('register.html')
 
-# --- LOGIN ---
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -55,16 +55,23 @@ def login():
             return "Invalid Credentials. Please try again."
     return render_template('login.html')
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
+
 @app.route('/user_dashboard')
 def user_dashboard():
     if 'email' not in session: return redirect(url_for('login'))
     return render_template('user_dashboard.html')
 
+# --- EXHIBITION & WISHLIST ROUTES ---
+
 @app.route('/virtual_exhibition')
 def virtual_exhibition():
+    if 'email' not in session: return redirect(url_for('login'))
     return render_template('virtual_exhibition.html')
 
-# --- WISHLIST: ADD ITEM ---
 @app.route('/add_to_wishlist', methods=['POST'])
 def add_to_wishlist():
     if 'email' not in session: return redirect(url_for('login'))
@@ -83,20 +90,17 @@ def add_to_wishlist():
     )
     return redirect(url_for('wishlist'))
 
-# --- WISHLIST: VIEW (ONLY YOUR ITEMS) ---
 @app.route('/wishlist')
 def wishlist():
     if 'email' not in session: return redirect(url_for('login'))
     
     email = session['email']
-    # Filtering strictly by the logged-in user's email partition key
     response = wishlist_table.query(
         KeyConditionExpression=Key('email').eq(email)
     )
     items = response.get('Items', [])
     return render_template('wishlist.html', wishlist=items)
 
-# --- WISHLIST: REMOVE ITEM ---
 @app.route('/remove_from_wishlist', methods=['POST'])
 def remove_from_wishlist():
     if 'email' not in session: return redirect(url_for('login'))
@@ -112,10 +116,39 @@ def remove_from_wishlist():
     )
     return redirect(url_for('wishlist'))
 
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('login'))
+# --- SCENARIO 2: HERITAGE QUIZ ROUTE ---
+
+@app.route('/quiz', methods=['GET', 'POST'])
+def quiz():
+    if 'email' not in session:
+        return redirect(url_for('login'))
+
+    questions = [
+        {
+            'id': 1,
+            'question': "What does the 'Peacock' (Mayil) motif symbolize in bridal jewelry?",
+            'options': ['Wealth', 'Beauty and Royalty', 'Strength', 'Longevity'],
+            'correct': 'Beauty and Royalty'
+        },
+        {
+            'id': 2,
+            'question': "The 'Manga' (Mango) pattern is most commonly found in which necklace?",
+            'options': ['Kasu Mala', 'Manga Haram', 'Temple Haram', 'Vanki'],
+            'correct': 'Manga Haram'
+        }
+    ]
+
+    if request.method == 'POST':
+        score = 0
+        for q in questions:
+            user_answer = request.form.get(f"q{q['id']}")
+            if user_answer == q['correct']:
+                score += 1
+        
+        passed = (score == len(questions))
+        return render_template('quiz_result.html', score=score, total=len(questions), passed=passed)
+
+    return render_template('quiz.html', questions=questions)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True)
