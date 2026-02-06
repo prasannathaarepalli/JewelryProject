@@ -1,16 +1,116 @@
-<div class="jewelry-card">
-    <img src="https://prasannatha-jewelry-assets.s3.ap-south-1.amazonaws.com/kasu_mala.jpg" 
-         alt="Kasu Mala Necklace" 
-         style="width:100%; height:250px; object-fit:cover;">
-    
-    <div class="product-details">
-        <h3>Traditional Kasu Mala</h3>
-        <p class="price">₹1,85,000</p>
-        
-        <form action="/add_to_wishlist" method="POST">
-            <input type="hidden" name="item_id" value="PROD_KASU_001">
-            <input type="hidden" name="item_name" value="Kasu Mala Necklace">
-            <button type="submit" class="btn-wishlist">Add to Wishlist</button>
-        </form>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exhibition | Prasannatha Jewelers</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            font-family: 'Playfair Display', serif;
+            background-color: #fcfcfc;
+            margin: 0;
+        }
+
+        .exhibition-header {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: #fff;
+        }
+
+        .exhibition-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            padding: 20px 10%;
+        }
+
+        .jewelry-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            text-align: center;
+            padding-bottom: 20px;
+        }
+
+        .jewelry-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        /* UPDATED IMAGE STYLING */
+        .jewelry-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: contain; /* Shows the full necklace without cutting edges */
+            background-color: #f9f9f9; /* Soft background for transparent/white images */
+            border-bottom: 1px solid #eee;
+        }
+
+        .product-details h3 {
+            color: #333;
+            margin: 15px 0 5px 0;
+        }
+
+        .price {
+            color: #D4AF37; /* Royal Gold */
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .btn-wishlist {
+            background-color: #D4AF37;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-wishlist:hover {
+            background-color: #b8962d;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <h1>Prasannatha Jewelers</h1>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/virtual_exhibition">Exhibition</a>
+        <a href="/wishlist">My Wishlist</a>
+        <a href="/logout">Logout</a>
     </div>
 </div>
+
+<div class="exhibition-header">
+    <h2>The Bridal Heritage Collection</h2>
+    <p>Handcrafted elegance for your most precious moments.</p>
+</div>
+
+<div class="exhibition-grid">
+    
+    <div class="jewelry-card">
+        <img src="https://prasannatha-jewelry-assets.s3.ap-south-1.amazonaws.com/kasu_mala.jpg" 
+             alt="Kasu Mala Necklace">
+        
+        <div class="product-details">
+            <h3>Traditional Kasu Mala</h3>
+            <p class="price">₹1,85,000</p>
+            
+            <form action="/add_to_wishlist" method="POST">
+                <input type="hidden" name="item_id" value="KASU001">
+                <input type="hidden" name="item_name" value="Traditional Kasu Mala">
+                <button type="submit" class="btn-wishlist">Add to Wishlist</button>
+            </form>
+        </div>
+    </div>
+
+    </div>
+
+</body>
+</html>
