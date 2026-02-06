@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Dashboard | Prasannatha Jewelers</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: #fcfcfc; color: #333; }
@@ -50,10 +51,10 @@
 <div class="navbar">
     <h1>Prasannatha Jewelers</h1>
     <div class="nav-links">
-        <a href="/virtual_exhibition">Exhibition</a>
-        <a href="/wishlist">Wishlist</a>
-        <a href="/quiz">Quiz</a>
-        <a href="/logout" style="color: #ff9999;">Logout</a>
+        <a href="{{ url_for('virtual_exhibition') }}">Exhibition</a>
+        <a href="{{ url_for('wishlist') }}">Wishlist</a>
+        <a href="{{ url_for('quiz') }}">Quiz</a>
+        <a href="{{ url_for('logout') }}" style="color: #ff9999;">Logout</a>
     </div>
 </div>
 
@@ -64,25 +65,25 @@
     </div>
 
     <div class="dashboard-grid">
-        <a href="/virtual_exhibition" class="dash-card">
+        <a href="{{ url_for('virtual_exhibition') }}" class="dash-card">
             <div class="icon">🖼️</div>
             <h3>Exhibition</h3>
             <p>View the collection</p>
         </a>
 
-        <a href="/wishlist" class="dash-card">
+        <a href="{{ url_for('wishlist') }}" class="dash-card">
             <div class="icon">❤️</div>
             <h3>My Wishlist</h3>
             <p>Your saved jewelry</p>
         </a>
 
-        <a href="/quiz" class="dash-card">
+        <a href="{{ url_for('quiz') }}" class="dash-card">
             <div class="icon">📜</div>
             <h3>Heritage Quiz</h3>
             <p>Win 10% Discount</p>
         </a>
 
-        <a href="#" class="dash-card">
+        <a href="{{ url_for('order') }}" class="dash-card">
             <div class="icon">📦</div>
             <h3>My Orders</h3>
             <p>Track purchases</p>
