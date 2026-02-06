@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import boto3
 from boto3.dynamodb.conditions import Key
 from datetime import datetime
@@ -8,6 +8,7 @@ app = Flask(__name__)
 app.secret_key = 'prasannatha_secret_key'
 
 # --- AWS DYNAMODB SETUP ---
+# Ensure your region matches your setup (ap-south-1 is Mumbai)
 dynamodb = boto3.resource('dynamodb', region_name='ap-south-1')
 user_table = dynamodb.Table('UserTable')
 wishlist_table = dynamodb.Table('WishlistTable')
@@ -62,19 +63,22 @@ def logout():
 
 @app.route('/user_dashboard')
 def user_dashboard():
-    if 'email' not in session: return redirect(url_for('login'))
+    if 'email' not in session: 
+        return redirect(url_for('login'))
     return render_template('user_dashboard.html')
 
 # --- EXHIBITION & WISHLIST ROUTES ---
 
 @app.route('/virtual_exhibition')
 def virtual_exhibition():
-    if 'email' not in session: return redirect(url_for('login'))
+    if 'email' not in session: 
+        return redirect(url_for('login'))
     return render_template('virtual_exhibition.html')
 
 @app.route('/add_to_wishlist', methods=['POST'])
 def add_to_wishlist():
-    if 'email' not in session: return redirect(url_for('login'))
+    if 'email' not in session: 
+        return redirect(url_for('login'))
     
     email = session['email']
     item_id = request.form.get('item_id')
@@ -92,7 +96,8 @@ def add_to_wishlist():
 
 @app.route('/wishlist')
 def wishlist():
-    if 'email' not in session: return redirect(url_for('login'))
+    if 'email' not in session: 
+        return redirect(url_for('login'))
     
     email = session['email']
     response = wishlist_table.query(
@@ -103,7 +108,8 @@ def wishlist():
 
 @app.route('/remove_from_wishlist', methods=['POST'])
 def remove_from_wishlist():
-    if 'email' not in session: return redirect(url_for('login'))
+    if 'email' not in session: 
+        return redirect(url_for('login'))
     
     email = session['email']
     item_id = request.form.get('item_id')
@@ -150,5 +156,34 @@ def quiz():
 
     return render_template('quiz.html', questions=questions)
 
+# --- SCENARIO 3: ORDERING SYSTEM ---
+
+@app.route('/order', methods=['GET', 'POST'])
+def order():
+    if 'email' not in session:
+        return redirect(url_for('login'))
+    
+    if request.method == 'POST':
+        # Logic: Here you could save shipping info to DynamoDB
+        # For this demo, we successfully "place" the order and view history
+        return redirect(url_for('order_history'))
+
+    return render_template('order_form.html')
+
+@app.route('/order_history')
+def order_history():
+    if 'email' not in session:
+        return redirect(url_for('login'))
+    
+    email = session['email']
+    # We query the wishlist items to simulate a 'Purchased Items' history
+    response = wishlist_table.query(
+        KeyConditionExpression=Key('email').eq(email)
+    )
+    items = response.get('Items', [])
+    return render_template('order_history.html', orders=items)
+
+# --- APP START ---
 if __name__ == '__main__':
+    # Using port 80 for AWS EC2 deployment
     app.run(host='0.0.0.0', port=80, debug=True)
