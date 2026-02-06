@@ -1,32 +1,86 @@
-<!DOCTYPE html>
+c<!DOCTYPE html>
 <html>
 <head>
     <title>My Wishlist | Prasannatha Jewelers</title>
     <style>
-        body { font-family: Arial; padding: 20px; background: #f4f4f4; }
-        .card { background: white; padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 5px solid #D4AF37; }
-        .navbar { background: #800000; padding: 10px; color: gold; margin-bottom: 20px; }
-        .navbar a { color: white; margin-right: 15px; text-decoration: none; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background: #fcfcfc; color: #333; }
+        
+        /* Navbar Styling */
+        .navbar { background: #800000; padding: 15px 30px; color: #D4AF37; display: flex; justify-content: space-between; align-items: center; border-radius: 4px; margin-bottom: 30px; }
+        .navbar a { color: white; margin-left: 20px; text-decoration: none; font-weight: bold; }
+        .navbar a:hover { color: #D4AF37; }
+
+        /* Wishlist Container */
+        .wishlist-container { max-width: 900px; margin: 0 auto; }
+        
+        /* Card Styling */
+        .card { 
+            background: white; 
+            padding: 20px; 
+            margin: 15px 0; 
+            border-radius: 8px; 
+            border-left: 6px solid #D4AF37; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+
+        .item-info h3 { margin: 0 0 5px 0; color: #800000; }
+        .item-info p { margin: 0; color: #666; font-size: 0.9rem; }
+
+        /* Remove Button Styling */
+        .btn-remove { 
+            color: #d9534f; 
+            border: 1px solid #d9534f; 
+            background: transparent; 
+            padding: 8px 15px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .btn-remove:hover { background: #d9534f; color: white; }
+
+        .empty-msg { text-align: center; padding: 50px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
+
     <div class="navbar">
-        <strong>Prasannatha Jewelers</strong> | 
-        <a href="/virtual_exhibition">Exhibition</a>
-        <a href="/logout">Logout</a>
+        <strong>Prasannatha Jewelers</strong>
+        <div class="nav-links">
+            <a href="/virtual_exhibition">Exhibition</a>
+            <a href="/logout">Logout</a>
+        </div>
     </div>
 
-    <h2>My Saved Jewelry</h2>
+    <div class="wishlist-container">
+        <h2>My Saved Jewelry</h2>
+        <hr style="border: 0; border-top: 2px solid #D4AF37; width: 50px; margin: 10px 0 25px 0;">
 
-    {% if wishlist %}
-        {% for item in wishlist %}
-            <div class="card">
-                <h3>{{ item.item_name }}</h3>
-                <p>Date Added: {{ item.added_date }}</p>
+        {% if wishlist %}
+            {% for item in wishlist %}
+                <div class="card">
+                    <div class="item-info">
+                        <h3>{{ item.item_name }}</h3>
+                        <p><strong>Item ID:</strong> {{ item.item_id }}</p>
+                        <p><strong>Date Added:</strong> {{ item.added_date }}</p>
+                    </div>
+                    
+                    <form action="/remove_from_wishlist" method="POST">
+                        <input type="hidden" name="item_id" value="{{ item.item_id }}">
+                        <button type="submit" class="btn-remove">Remove</button>
+                    </form>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-msg">
+                <p>Your wishlist is currently empty.</p>
+                <a href="/virtual_exhibition" style="color: #800000; font-weight: bold;">Explore the Collection</a>
             </div>
-        {% endfor %}
-    {% else %}
-        <p>Your wishlist is empty. <a href="/virtual_exhibition">Go back and add items!</a></p>
-    {% endif %}
+        {% endif %}
+    </div>
+
 </body>
 </html>

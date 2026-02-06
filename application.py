@@ -16,6 +16,7 @@ wishlist_table = dynamodb.Table('WishlistTable')
 def home():
     return render_template('home.html', logged_in='email' in session)
 
+# --- REGISTRATION ---
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -38,6 +39,7 @@ def register():
             return f"Registration Error: {str(e)}"
     return render_template('register.html')
 
+# --- LOGIN ---
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -48,7 +50,6 @@ def login():
         
         if user and check_password_hash(user['hashed_password'], password):
             session['email'] = email
-            print(f"DEBUG: User logged in as {email}")
             return redirect(url_for('user_dashboard'))
         else:
             return "Invalid Credentials. Please try again."
@@ -61,9 +62,9 @@ def user_dashboard():
 
 @app.route('/virtual_exhibition')
 def virtual_exhibition():
-    if 'email' not in session: return redirect(url_for('login'))
     return render_template('virtual_exhibition.html')
 
+# --- WISHLIST: ADD ITEM ---
 @app.route('/add_to_wishlist', methods=['POST'])
 def add_to_wishlist():
     if 'email' not in session: return redirect(url_for('login'))
@@ -71,8 +72,6 @@ def add_to_wishlist():
     email = session['email']
     item_id = request.form.get('item_id')
     item_name = request.form.get('item_name')
-    
-    print(f"DEBUG: Adding {item_name} to wishlist for {email}")
     
     wishlist_table.put_item(
         Item={
@@ -84,20 +83,20 @@ def add_to_wishlist():
     )
     return redirect(url_for('wishlist'))
 
+# --- WISHLIST: VIEW (ONLY YOUR ITEMS) ---
 @app.route('/wishlist')
 def wishlist():
     if 'email' not in session: return redirect(url_for('login'))
     
     email = session['email']
-    # Filter strictly by the logged-in user's email
+    # Filtering strictly by the logged-in user's email partition key
     response = wishlist_table.query(
         KeyConditionExpression=Key('email').eq(email)
     )
     items = response.get('Items', [])
-    print(f"DEBUG: Found {len(items)} items in wishlist for {email}")
     return render_template('wishlist.html', wishlist=items)
 
-# --- NEW FEATURE: REMOVE FROM WISHLIST ---
+# --- WISHLIST: REMOVE ITEM ---
 @app.route('/remove_from_wishlist', methods=['POST'])
 def remove_from_wishlist():
     if 'email' not in session: return redirect(url_for('login'))
@@ -111,7 +110,6 @@ def remove_from_wishlist():
             'item_id': item_id
         }
     )
-    print(f"DEBUG: Removed {item_id} for {email}")
     return redirect(url_for('wishlist'))
 
 @app.route('/logout')
